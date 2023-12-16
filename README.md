@@ -3,9 +3,10 @@
 Ele possui as seguintes funcionalidades:
 
 - Cadastro de cobranças de pedidos
-- 
+-
 
 ## Rotas disponíveis na API
+
 Todas as rotas estão listadas através do Swagger no endereço `http://localhost:8084/swagger-ui/index.html`
 
 Obs.: Sugerimos o Insomnia e já disponibilizamos uma collection em `collections/insomnia`
@@ -35,39 +36,40 @@ Siga as instruções abaixo para executar o projeto via docker/docker-compose:
 
 1. Certifique-se de ter o Java 17 instalado em sua máquina.
 2. Acesse o diretório do projeto:
-    ```bash 
-        cd tech-challenge-pagamentos
-    ```
+   ```bash
+       cd tech-challenge-pagamentos
+   ```
 3. Execute o comando para buildar o projeto:
-    ```bash
-        ./mvnw clean package -DskipTests
-    ```
+   ```bash
+       ./mvnw clean package -DskipTests
+   ```
 4. Execute o comando para iniciar o ambiente Docker:
-    ```bash
-        docker-compose -f docker-compose-local.yml up -d
-    ```
+   ```bash
+       docker-compose -f docker-compose-local.yml up -d
+   ```
 5. Execute o comando para executar a aplicação:
-    ```bash
-        ./mvnw spring-boot:run
-    ```
+   ```bash
+       ./mvnw spring-boot:run
+   ```
 6. Acesse a API pelo seu client de escolha pelo seguinte endereço base: `http://localhost:8084`
 
 ### Caso queira rodar o projeto dentro de um cluster kubernetes local
 
 1. Certifique-se de ter o kubectl instalado e devidamente configurado para cluster kubernetes
 2. Execute o comando:
-    ```bash
-        kubectl apply -f deployment
-    ```
+   ```bash
+       kubectl apply -f deployment
+   ```
 3. Aguarde até que os pods estejam com status de RUNNING. **Os pods da applicação podem apresentar erros até que o mysql termine de subir**
 4. Acessando o serviço:
-    - Acesse a API pelo seu client de escolha pelo seguinte endereço base: `http://{IP_DO_SEU_CLUSTER}:30000`
-    - Se você estiver utilizando o minikube obtenha a url da aplição através do comando:
-    ```bash 
-        minikube service nlb-pagamentos-service --url
-    ```
+   - Acesse a API pelo seu client de escolha pelo seguinte endereço base: `http://{IP_DO_SEU_CLUSTER}:30000`
+   - Se você estiver utilizando o minikube obtenha a url da aplição através do comando:
+   ```bash
+       minikube service nlb-pagamentos-service --url
+   ```
 
 ## Contribuidores
+
 - [engmarcosalves](https://github.com/engmarcosalves) - Marcos de Oliveira Alves - eng.marcos.alves@gmail.com - RM 349707
 - [Vandrs](https://github.com/Vandrs) - Vanderson Wilson da Rosa Nunes - vann.nunes@gmail.com - RM 349849
 - [coelhos-gabi](https://github.com/coelhos-gabi) - Gabriela Siqueira do Vale Coelho - coelhos.gabi@gmail.com - RM 349957

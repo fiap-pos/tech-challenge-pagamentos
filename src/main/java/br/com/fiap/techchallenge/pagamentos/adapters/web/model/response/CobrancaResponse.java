@@ -1,10 +1,14 @@
-package br.com.fiap.techchallenge.pagamentos.core.domain.entities;
+package br.com.fiap.techchallenge.pagamentos.adapters.web.model.response;
 
+
+import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
 import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusCobrancaEnum;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
 
-public class Cobranca {
+public class CobrancaResponse {
 
     private Long id;
     private Long pedidoId;
@@ -12,19 +16,12 @@ public class Cobranca {
     private BigDecimal valor;
     private QrCode qrCode;
 
-    public Cobranca(Long pedidoId, StatusCobrancaEnum status, BigDecimal valor, QrCode qrCode) {
-        this.pedidoId = pedidoId;
-        this.status = status;
-        this.qrCode = qrCode;
-        this.valor = valor;
-    }
-
-    public Cobranca(Long id, Long pedidoId, StatusCobrancaEnum status, BigDecimal valor, QrCode qrCode) {
+    public CobrancaResponse(Long id, Long pedidoId, StatusCobrancaEnum status, BigDecimal valor, QrCode qrCode) {
         this.id = id;
         this.pedidoId = pedidoId;
         this.status = status;
-        this.qrCode = qrCode;
         this.valor = valor;
+        this.qrCode = qrCode;
     }
 
     public Long getId() {
@@ -43,7 +40,13 @@ public class Cobranca {
         return valor;
     }
 
+    @JsonIgnore
     public QrCode getQrCode() {
         return qrCode;
+    }
+
+    @JsonGetter(value = "qrCode")
+    public String getQrCodeAsBase64String() {
+        return qrCode.getEncodedBase64Value();
     }
 }

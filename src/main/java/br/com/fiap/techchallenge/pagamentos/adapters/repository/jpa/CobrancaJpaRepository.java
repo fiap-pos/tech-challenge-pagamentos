@@ -1,6 +1,6 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.repository.jpa;
 
-import br.com.fiap.techchallenge.pagamentos.adapters.repository.models.Cobranca;
+import br.com.fiap.techchallenge.pagamentos.adapters.repository.model.Cobranca;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

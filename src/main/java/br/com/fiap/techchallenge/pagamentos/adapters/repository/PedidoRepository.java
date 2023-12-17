@@ -1,13 +1,13 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.repository;
 
 import br.com.fiap.techchallenge.pagamentos.adapters.repository.jpa.PedidoJpaRepository;
-import br.com.fiap.techchallenge.pagamentos.adapters.repository.mappers.PedidoMapper;
-import br.com.fiap.techchallenge.pagamentos.adapters.repository.models.Pedido;
-import br.com.fiap.techchallenge.pagamentos.core.domain.entities.enums.StatusPedidoEnum;
-import br.com.fiap.techchallenge.pagamentos.core.domain.exceptions.EntityNotFoundException;
+import br.com.fiap.techchallenge.pagamentos.adapters.repository.mapper.PedidoMapper;
+import br.com.fiap.techchallenge.pagamentos.adapters.repository.model.Pedido;
+import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusPedidoEnum;
+import br.com.fiap.techchallenge.pagamentos.core.domain.exception.EntityNotFoundException;
 import br.com.fiap.techchallenge.pagamentos.core.dto.PedidoDTO;
-import br.com.fiap.techchallenge.pagamentos.core.ports.out.AtualizaStatusPedidoOutputPort;
-import br.com.fiap.techchallenge.pagamentos.core.ports.out.BuscarPedidoPorIdOutputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.out.AtualizaStatusPedidoOutputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.out.BuscarPedidoPorIdOutputPort;
 import org.springframework.stereotype.Repository;
 
 @Repository

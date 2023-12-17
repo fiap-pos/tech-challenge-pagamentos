@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.gateways;
 
 import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
-import br.com.fiap.techchallenge.pagamentos.core.ports.out.CriaQrCodeOutputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.out.CriaQrCodeOutputPort;
 
 import java.math.BigDecimal;
 

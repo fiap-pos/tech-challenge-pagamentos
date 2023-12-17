@@ -1,9 +1,9 @@
 package br.com.fiap.techchallenge.pagamentos.config;
 
 import br.com.fiap.techchallenge.pagamentos.adapters.gateways.PagamentoMock;
-import br.com.fiap.techchallenge.pagamentos.core.ports.in.*;
-import br.com.fiap.techchallenge.pagamentos.core.ports.out.*;
-import br.com.fiap.techchallenge.pagamentos.core.usecases.*;
+import br.com.fiap.techchallenge.pagamentos.core.port.in.*;
+import br.com.fiap.techchallenge.pagamentos.core.port.out.*;
+import br.com.fiap.techchallenge.pagamentos.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

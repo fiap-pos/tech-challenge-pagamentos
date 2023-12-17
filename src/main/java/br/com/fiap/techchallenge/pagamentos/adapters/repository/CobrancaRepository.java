@@ -1,15 +1,15 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.repository;
 
 import br.com.fiap.techchallenge.pagamentos.adapters.repository.jpa.CobrancaJpaRepository;
-import br.com.fiap.techchallenge.pagamentos.adapters.repository.mappers.CobrancaMapper;
-import br.com.fiap.techchallenge.pagamentos.adapters.repository.models.Cobranca;
+import br.com.fiap.techchallenge.pagamentos.adapters.repository.mapper.CobrancaMapper;
+import br.com.fiap.techchallenge.pagamentos.adapters.repository.model.Cobranca;
 import br.com.fiap.techchallenge.pagamentos.core.dto.AtualizaStatusCobrancaDTO;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
-import br.com.fiap.techchallenge.pagamentos.core.ports.out.AtualizaStatusCobrancaOutputPort;
-import br.com.fiap.techchallenge.pagamentos.core.ports.out.BuscaCobrancaOutputPort;
-import br.com.fiap.techchallenge.pagamentos.core.ports.out.CriaCobrancaOutputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.out.AtualizaStatusCobrancaOutputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.out.BuscaCobrancaOutputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.out.CriaCobrancaOutputPort;
 import org.springframework.stereotype.Repository;
-import br.com.fiap.techchallenge.pagamentos.core.domain.exceptions.EntityNotFoundException;
+import br.com.fiap.techchallenge.pagamentos.core.domain.exception.EntityNotFoundException;
 @Repository
 public class CobrancaRepository implements CriaCobrancaOutputPort, BuscaCobrancaOutputPort,
         AtualizaStatusCobrancaOutputPort {

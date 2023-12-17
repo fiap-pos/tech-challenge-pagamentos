@@ -1,16 +1,16 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.web;
 
 
-import br.com.fiap.techchallenge.pagamentos.adapters.web.mappers.CobrancaMapper;
-import br.com.fiap.techchallenge.pagamentos.adapters.web.models.request.AtualizaStatusCobrancaRequest;
-import br.com.fiap.techchallenge.pagamentos.adapters.web.models.request.CobrancaRequest;
-import br.com.fiap.techchallenge.pagamentos.adapters.web.models.request.WebhookStatusCobrancaRequest;
-import br.com.fiap.techchallenge.pagamentos.adapters.web.models.response.CobrancaResponse;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.mapper.CobrancaMapper;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.model.request.AtualizaStatusCobrancaRequest;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.model.request.CobrancaRequest;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.model.request.WebhookStatusCobrancaRequest;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.model.response.CobrancaResponse;
 import br.com.fiap.techchallenge.pagamentos.core.dto.StatusPagamentoDTO;
-import br.com.fiap.techchallenge.pagamentos.core.ports.in.AtualizaStatusCobrancaInputPort;
-import br.com.fiap.techchallenge.pagamentos.core.ports.in.BuscaCobrancaPorIdInputPort;
-import br.com.fiap.techchallenge.pagamentos.core.ports.in.BuscaStatusPagamentoInputPort;
-import br.com.fiap.techchallenge.pagamentos.core.ports.in.CriaCobrancaInputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.in.AtualizaStatusCobrancaInputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.in.BuscaCobrancaPorIdInputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.in.BuscaStatusPagamentoInputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.in.CriaCobrancaInputPort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

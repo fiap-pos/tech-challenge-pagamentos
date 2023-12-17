@@ -2,7 +2,7 @@ package br.com.fiap.techchallenge.pagamentos.core.dto;
 
 import br.com.fiap.techchallenge.pagamentos.core.domain.entities.Cobranca;
 import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
-import br.com.fiap.techchallenge.pagamentos.core.domain.entities.enums.StatusCobrancaEnum;
+import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusCobrancaEnum;
 
 import java.math.BigDecimal;
 

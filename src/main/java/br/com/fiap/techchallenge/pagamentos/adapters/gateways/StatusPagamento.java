@@ -1,9 +1,9 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.gateways;
 
-import br.com.fiap.techchallenge.pagamentos.adapters.web.models.StatusPedidoMercadoPago;
-import br.com.fiap.techchallenge.pagamentos.core.domain.exceptions.PaymentErrorException;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.model.StatusPedidoMercadoPago;
+import br.com.fiap.techchallenge.pagamentos.core.domain.exception.PaymentErrorException;
 import br.com.fiap.techchallenge.pagamentos.core.dto.StatusPagamentoDTO;
-import br.com.fiap.techchallenge.pagamentos.core.ports.out.BuscaStatusPagamentoOutputPort;
+import br.com.fiap.techchallenge.pagamentos.core.port.out.BuscaStatusPagamentoOutputPort;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.OkHttpClient;

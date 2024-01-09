@@ -11,19 +11,26 @@ import br.com.fiap.techchallenge.pagamentos.core.port.in.AtualizaStatusCobrancaI
 import br.com.fiap.techchallenge.pagamentos.core.port.in.BuscaCobrancaPorIdInputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.in.BuscaStatusPagamentoInputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.in.CriaCobrancaInputPort;
+import io.awspring.cloud.messaging.core.QueueMessagingTemplate;
+import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
+import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
-
+@Slf4j
 @Tag(name = "Cobranca", description = "APIs para geração e confirmação de pagamento de cobranças")
 @RestController
 @RequestMapping("/cobrancas")
 public class CobrancaController extends ControllerBase {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CobrancaController.class);
 
     private final Logger logger = LoggerFactory.getLogger(CobrancaController.class);
     private final CriaCobrancaInputPort criaCobrancaInputPort;
@@ -32,18 +39,36 @@ public class CobrancaController extends ControllerBase {
     private final CobrancaMapper cobrancaMapper;
     private final BuscaStatusPagamentoInputPort buscaStatusPagamentoInputPort;
 
+    @Value("${cloud.aws.end-point.uri}")
+    private String endpoint;
+    private QueueMessagingTemplate queueMessagingTemplate;
+
     public CobrancaController(
             CriaCobrancaInputPort criaCobrancaInputPort,
             BuscaCobrancaPorIdInputPort buscaCobrancaPorIdInputPort,
             AtualizaStatusCobrancaInputPort atualizaStatusCobrancaInputPort,
             CobrancaMapper cobrancaMapper,
-            BuscaStatusPagamentoInputPort buscaStatusPagamentoInputPort
+            BuscaStatusPagamentoInputPort buscaStatusPagamentoInputPort,
+            QueueMessagingTemplate queueMessagingTemplate
     ) {
         this.criaCobrancaInputPort = criaCobrancaInputPort;
         this.buscaCobrancaPorIdInputPort = buscaCobrancaPorIdInputPort;
         this.atualizaStatusCobrancaInputPort = atualizaStatusCobrancaInputPort;
         this.cobrancaMapper = cobrancaMapper;
         this.buscaStatusPagamentoInputPort = buscaStatusPagamentoInputPort;
+        this.queueMessagingTemplate = queueMessagingTemplate;
+    }
+
+    @PostMapping("/message")
+    public void sendMessageToQueue(@RequestBody CobrancaRequest cobrancaRequest){
+        queueMessagingTemplate.convertAndSend(endpoint, cobrancaRequest);
+    }
+
+    @SqsListener(value = "${cloud.aws.end-point.uri}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
+    @GetMapping("/message")
+    public void loadMessageFromSqs(){
+        var mensagem = queueMessagingTemplate.receiveAndConvert(endpoint, CobrancaRequest.class);
+        System.out.println(mensagem);
     }
 
     @Operation(summary = "Cria uma nova Cobrança")

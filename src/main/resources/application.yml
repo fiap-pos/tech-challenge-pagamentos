@@ -1,0 +1,10 @@
+cloud:
+  aws:
+    region:
+      static: us-east-1
+      auto: false
+    credentials:
+      access-key: admin
+      secret-key: admin
+    end-point:
+      uri: https://localhost.localstack.cloud:4566/000000000000/sqsPagamentos

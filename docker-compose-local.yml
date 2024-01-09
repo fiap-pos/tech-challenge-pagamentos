@@ -1,0 +1,33 @@
+version: '3.5'
+
+services:
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: pagamentos_db
+    ports:
+      - "3306:3306"
+    networks:
+      - pagamentos_network
+    expose:
+      - 3306
+
+  mock:
+    build:
+      context: wiremock
+    image: wiremock/wiremock
+    ports:
+      - "8081:8080"
+    networks:
+      - pagamentos_network
+    volumes:
+      - ./wiremock/__files:/home/wiremock/__files
+      - ./wiremock/mappings:/home/wiremock/mappings
+      - ./wiremock/logs:/home/wiremock/logs
+
+networks:
+  pagamentos_network:
+    name: "pagamentos_network"
+    driver: bridge

@@ -39,6 +39,19 @@ services:
       AWS_SECRET_ACCESS_KEY: admin
       AWS_REGION: us-east-1
 
+  localstack:
+    container_name: pagamentos_localstack
+    image: localstack/localstack
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"
+    networks:
+      - pagamentos_network  # external services port range
+    environment:
+      AWS_ACCESS_KEY_ID: admin
+      AWS_SECRET_ACCESS_KEY: admin
+      AWS_REGION: us-east-1
+
 networks:
   pagamentos_network:
     name: "pagamentos_network"

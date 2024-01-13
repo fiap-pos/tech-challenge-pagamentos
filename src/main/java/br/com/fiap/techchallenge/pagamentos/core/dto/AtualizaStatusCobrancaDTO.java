@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.pagamentos.core.dto;
 
-import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusCobrancaEnum;
+import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusEnum;
 
-public record AtualizaStatusCobrancaDTO (StatusCobrancaEnum status) {
+public record AtualizaStatusCobrancaDTO (StatusEnum status) {
 
 }

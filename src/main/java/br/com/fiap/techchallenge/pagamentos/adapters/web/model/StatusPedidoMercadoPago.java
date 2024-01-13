@@ -1,7 +1,7 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.web.model;
 
 
-import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusCobrancaEnum;
+import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusEnum;
 import br.com.fiap.techchallenge.pagamentos.core.dto.StatusPagamentoDTO;
 
 import java.util.List;
@@ -25,10 +25,10 @@ public class StatusPedidoMercadoPago {
         return payments;
     }
 
-    private StatusCobrancaEnum toStatusCobrancaEnum() {
+    private StatusEnum toStatusCobrancaEnum() {
         return switch (this.payments.get(0).getStatus()) {
-            case "approved" -> StatusCobrancaEnum.PAGO;
-            case "rejected" -> StatusCobrancaEnum.RECUSADO;
+            case "approved" -> StatusEnum.PAGO;
+            case "rejected" -> StatusEnum.RECUSADO;
             default -> null;
         };
     }

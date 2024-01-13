@@ -2,7 +2,7 @@ package br.com.fiap.techchallenge.pagamentos.adapters.web.model.response;
 
 
 import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
-import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusCobrancaEnum;
+import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -12,11 +12,14 @@ public class CobrancaResponse {
 
     private Long id;
     private Long pedidoId;
-    private StatusCobrancaEnum status;
+    private StatusEnum status;
     private BigDecimal valor;
     private QrCode qrCode;
 
-    public CobrancaResponse(Long id, Long pedidoId, StatusCobrancaEnum status, BigDecimal valor, QrCode qrCode) {
+    public CobrancaResponse() {
+    }
+
+    public CobrancaResponse(Long id, Long pedidoId, StatusEnum status, BigDecimal valor, QrCode qrCode) {
         this.id = id;
         this.pedidoId = pedidoId;
         this.status = status;
@@ -32,7 +35,7 @@ public class CobrancaResponse {
         return pedidoId;
     }
 
-    public StatusCobrancaEnum getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 

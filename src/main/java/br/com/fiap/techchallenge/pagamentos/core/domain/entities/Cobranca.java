@@ -1,6 +1,6 @@
 package br.com.fiap.techchallenge.pagamentos.core.domain.entities;
 
-import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusCobrancaEnum;
+import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusEnum;
 
 import java.math.BigDecimal;
 
@@ -8,18 +8,18 @@ public class Cobranca {
 
     private Long id;
     private Long pedidoId;
-    private StatusCobrancaEnum status;
+    private StatusEnum status;
     private BigDecimal valor;
     private QrCode qrCode;
 
-    public Cobranca(Long pedidoId, StatusCobrancaEnum status, BigDecimal valor, QrCode qrCode) {
+    public Cobranca(Long pedidoId, StatusEnum status, BigDecimal valor, QrCode qrCode) {
         this.pedidoId = pedidoId;
         this.status = status;
         this.qrCode = qrCode;
         this.valor = valor;
     }
 
-    public Cobranca(Long id, Long pedidoId, StatusCobrancaEnum status, BigDecimal valor, QrCode qrCode) {
+    public Cobranca(Long id, Long pedidoId, StatusEnum status, BigDecimal valor, QrCode qrCode) {
         this.id = id;
         this.pedidoId = pedidoId;
         this.status = status;
@@ -35,7 +35,7 @@ public class Cobranca {
         return pedidoId;
     }
 
-    public StatusCobrancaEnum getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 

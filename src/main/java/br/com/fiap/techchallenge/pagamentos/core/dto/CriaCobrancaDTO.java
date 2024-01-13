@@ -1,5 +1,7 @@
 package br.com.fiap.techchallenge.pagamentos.core.dto;
 
-public record CriaCobrancaDTO(Long pedidoId) {
+import java.math.BigDecimal;
+
+public record CriaCobrancaDTO(Long pedidoId, BigDecimal valor) {
 }
 

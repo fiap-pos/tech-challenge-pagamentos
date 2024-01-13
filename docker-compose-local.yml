@@ -1,19 +1,17 @@
 version: '3.5'
 
 services:
-  mysql:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+  postgres:
+    image: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: pagamentos_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "3306:3306"
+      - "5432:5432"
     networks:
       - pagamentos_network
     expose:
-      - 3306
-
+      - 5432
   mock:
     build:
       context: wiremock
@@ -26,6 +24,19 @@ services:
       - ./wiremock/__files:/home/wiremock/__files
       - ./wiremock/mappings:/home/wiremock/mappings
       - ./wiremock/logs:/home/wiremock/logs
+
+  localstack:
+    container_name: pagamentos_localstack
+    image: localstack/localstack
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"
+    networks:
+      - pagamentos_network  # external services port range
+    environment:
+      AWS_ACCESS_KEY_ID: admin
+      AWS_SECRET_ACCESS_KEY: admin
+      AWS_REGION: us-east-1
 
 networks:
   pagamentos_network:

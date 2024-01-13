@@ -28,13 +28,11 @@ public class CoreInjectionConfig {
     CriaCobrancaInputPort criarCobranca(
             CriaCobrancaOutputPort criaCobrancaOutputPort,
             CriaQrCodeOutputPort criaQrCodeOutputPort,
-            BuscarPedidoPorIdOutputPort buscarPedidoPorIdOutputPort,
             BuscaCobrancaOutputPort buscaCobrancaOutputPort
     ) {
         return new CriaCobrancaUseCase(
                 criaCobrancaOutputPort,
                 criaQrCodeOutputPort,
-                buscarPedidoPorIdOutputPort,
                 buscaCobrancaOutputPort
         );
     }
@@ -42,13 +40,11 @@ public class CoreInjectionConfig {
     @Bean
     AtualizaStatusCobrancaInputPort atualiStatusCobranca(
             AtualizaStatusCobrancaOutputPort atualizaStatusCobrancaOutputPort,
-            BuscaCobrancaOutputPort buscaCobrancaOutputPort,
-            AtualizaStatusPedidoOutputPort atualizaStatusPedidoOutputPort
+            BuscaCobrancaOutputPort buscaCobrancaOutputPort
     ) {
         return new AtualizaStatusCobrancaUseCase(
                 buscaCobrancaOutputPort,
-                atualizaStatusCobrancaOutputPort,
-                atualizaStatusPedidoOutputPort
+                atualizaStatusCobrancaOutputPort
         );
     }
 
@@ -57,8 +53,8 @@ public class CoreInjectionConfig {
         return new BuscaStatusPagamentoUseCase(buscaStatusPagamentoOutputPort);
     }
 
-    @Bean
-    BuscarPedidoPorIdInputPort buscarPedidoPorId(BuscarPedidoPorIdOutputPort buscarPedidoPorIdOutputPort){
-        return new BuscarPedidoPorIdUseCase(buscarPedidoPorIdOutputPort);
-    }
+//    @Bean
+//    EnviaMensagemInputPort enviaMensagem(EnviaMensagemOutputPort enviaMensagemOutputPort){
+//        return new EnviaMensagemUseCase(enviaMensagemOutputPort);
+//    }
 }

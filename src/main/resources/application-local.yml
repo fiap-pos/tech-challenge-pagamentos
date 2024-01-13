@@ -1,0 +1,4 @@
+aws:
+  access-key: ${AWS_ACCESS_KEY:admin}
+  secret-key: ${AWS_SECRET_KEY:admin}
+  endpoint: ${AWS_ENDPOINT:http://localhost:4566}

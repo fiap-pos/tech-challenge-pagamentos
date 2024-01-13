@@ -12,7 +12,7 @@ public class CobrancaMapper {
                 cobranca.pedidoId(),
                 cobranca.status(),
                 cobranca.valor(),
-                cobranca.qrCode().getEncodedBase64Value()
+                cobranca.qrCode()
         );
     }
 
@@ -22,7 +22,7 @@ public class CobrancaMapper {
                 cobranca.getPedidoId(),
                 cobranca.getValor(),
                 cobranca.getStatus(),
-                new QrCode(cobranca.getQrCode())
+                cobranca.getQrCode()
         );
     }
 }

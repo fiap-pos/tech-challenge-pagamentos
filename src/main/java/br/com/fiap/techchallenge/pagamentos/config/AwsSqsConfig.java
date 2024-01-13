@@ -1,35 +1,27 @@
 package br.com.fiap.techchallenge.pagamentos.config;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.sqs.AmazonSQSAsync;
-import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
-import io.awspring.cloud.messaging.core.QueueMessagingTemplate;
-import org.springframework.beans.factory.annotation.Value;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.awspring.cloud.sqs.config.SqsListenerConfigurer;
+import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 @Configuration
 public class AwsSqsConfig {
-    @Value("${cloud.aws.region.static}")
-    private String region;
-
-    @Value("${cloud.aws.credentials.access-key}")
-    private String awsAccessKey;
-
-    @Value("${cloud.aws.credentials.secret-key}")
-    private String awsSecretKey;
 
     @Bean
-    public QueueMessagingTemplate queueMessagingTemplate(){
-        return new QueueMessagingTemplate(amazonSQSAsync());
+    public SqsTemplate sqsTemplate(SqsAsyncClient sqsAsyncClient, ObjectMapper objectMapper) {
+        return SqsTemplate.builder().configureDefaultConverter(converter -> {
+                    converter.setObjectMapper(objectMapper);
+                }).sqsAsyncClient(sqsAsyncClient)
+                .build();
     }
+
     @Bean
-    public AmazonSQSAsync amazonSQSAsync(){
-        return AmazonSQSAsyncClientBuilder.standard().withRegion(Regions.US_EAST_1)
-                .withCredentials(new AWSStaticCredentialsProvider(
-                        new BasicAWSCredentials(awsAccessKey, awsSecretKey))
-                ).build();
+    SqsListenerConfigurer configurer(ObjectMapper objectMapper) {
+        return registrar -> {
+            registrar.setObjectMapper(objectMapper);
+        };
     }
 }

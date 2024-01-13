@@ -12,5 +12,5 @@ WORKDIR /app
 RUN addgroup --system pagamentos-app && useradd -r pagamentos-app -g pagamentos-app
 RUN chown -R pagamentos-app:pagamentos-app /app
 USER pagamentos-app
-EXPOSE 8080
+EXPOSE 8084
 CMD "dumb-init" "java" "-jar" "java-application.jar"

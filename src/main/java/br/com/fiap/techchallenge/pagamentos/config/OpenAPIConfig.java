@@ -12,7 +12,7 @@ import java.util.List;
 @Configuration
 public class OpenAPIConfig {
 
-    @Value("${techchalenge.openapi.dev-url}")
+    @Value("${pagamentos.openapi.dev-url}")
     private String url;
 
     @Bean

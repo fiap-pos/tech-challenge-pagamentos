@@ -1,8 +1,7 @@
-CREATE TYPE status_cobranca AS ENUM ('PENDENTE', 'PAGO', 'RECEBIDO', 'CANCELADO', 'RECUSADO');
-CREATE TABLE COBRANCA (
+CREATE TABLE IF NOT EXISTS cobranca (
       id SERIAL PRIMARY KEY,
       pedido_id bigint  NOT NULL,
-      status status_cobranca  NOT NULL,
+      status VARCHAR(30)  NOT NULL,
       valor NUMERIC(10,2) NOT NULL,
       qr_code text NOT NULL,
       created_at timestamp NOT NULL,

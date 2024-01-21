@@ -1,6 +1,7 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.web.mapper;
 
 import br.com.fiap.techchallenge.pagamentos.adapters.web.model.response.CobrancaResponse;
+import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ public class CobrancaMapper {
                 cobrancaOut.pedidoId(),
                 cobrancaOut.status(),
                 cobrancaOut.valor(),
-                cobrancaOut.qrCode()
+                new QrCode(cobrancaOut.qrCode())
         );
     }
 }

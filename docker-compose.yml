@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres
+    healthcheck:
+      test: "exit 0"
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: root
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: pagamentos_db
+    ports:
+      - "5432:5432"
+    networks:
+      - pagamentos_network
+    expose:
+      - 5432
+  pagamentos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    environment:
+      DB_HOST: 'postgres:5432/pagamentos_db'
+      DB_USER: 'root'
+      DB_PASS: '123456'
+      AWS_ACCESS_KEY_ID: 'admin'
+      AWS_SECRET_ACCESS_KEY: 'admin'
+      AWS_REGION: 'us-east-1'
+    ports:
+      - "8084:8084"
+    networks:
+      - pagamentos_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mock:
+        condition: service_started
+  mock:
+    image: wiremock/wiremock
+    ports:
+      - "8081:8080"
+    networks:
+      - pagamentos_network
+    volumes:
+      - ./wiremock/__files:/home/wiremock/__files
+      - ./wiremock/mappings:/home/wiremock/mappings
+      - ./wiremock/logs:/home/wiremock/logs
+networks:
+  pagamentos_network:
+    name: "pagamentos_network"
+    driver: bridge

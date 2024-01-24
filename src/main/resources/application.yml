@@ -30,7 +30,7 @@ springdoc:
 pagamentos:
   openapi:
     dev-url: http://localhost:8084
-  queue: sqsPagamentos
+  queue: pagamentos
 
 mercadopago:
   api:

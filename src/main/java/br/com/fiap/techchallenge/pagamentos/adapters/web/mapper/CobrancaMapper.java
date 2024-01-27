@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 @Component("CobrancaMapperWeb")
 public class CobrancaMapper {
     public CobrancaResponse toCobrancaResponse(CobrancaDTO cobrancaOut) {
+        QrCode qrCode = new QrCode(cobrancaOut.qrCode());
         return new CobrancaResponse(
                 cobrancaOut.id(),
                 cobrancaOut.pedidoId(),
                 cobrancaOut.status(),
                 cobrancaOut.valor(),
-                new QrCode(cobrancaOut.qrCode())
+                qrCode
         );
     }
 }

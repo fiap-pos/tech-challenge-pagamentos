@@ -28,17 +28,8 @@ public class AtualizaStatusCobrancaUseCase implements AtualizaStatusCobrancaInpu
         if (cobrancaOut.status() != StatusEnum.PENDENTE) {
             throw new BadRequestException("Cobranca "+id+" não pode mais ser atualizada.");
         }
-        var novoStatus = getStatusPedido(cobrancaStatusIn.status());
 
-        return atualizaStatusCobrancaOutputPort.atualizarStatus(id, novoStatus);
-    }
-
-    private StatusEnum getStatusPedido(StatusEnum statusCobranca) {
-        return switch(statusCobranca) {
-            case PAGO -> StatusEnum.RECEBIDO;
-            case CANCELADO, RECUSADO -> StatusEnum.CANCELADO;
-            default -> null;
-        };
+        return atualizaStatusCobrancaOutputPort.atualizarStatus(id, cobrancaStatusIn.status());
     }
 }
 

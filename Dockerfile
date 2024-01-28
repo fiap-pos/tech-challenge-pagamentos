@@ -4,9 +4,8 @@ WORKDIR /app
 COPY . /app
 RUN mvn clean package -DskipTests
 
-FROM amazoncorretto:17.0.10
+FROM eclipse-temurin:17.0.7_7-jre-focal@sha256:901eeb64e3d1e74d261e82e4158386407b95628eaf723058fb96d4efb9141b88
 RUN mkdir /app
-RUN apt-get update && apt-get install -y dumb-init
 COPY --from=build /app/target/pagamentos-*.jar /app/java-application.jar
 WORKDIR /app
 RUN addgroup --system pagamentos-app && useradd -r pagamentos-app -g pagamentos-app

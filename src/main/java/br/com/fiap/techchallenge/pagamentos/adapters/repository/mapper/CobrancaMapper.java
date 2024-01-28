@@ -1,7 +1,6 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.repository.mapper;
 
 import br.com.fiap.techchallenge.pagamentos.adapters.repository.model.Cobranca;
-import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
 import org.springframework.stereotype.Component;
 

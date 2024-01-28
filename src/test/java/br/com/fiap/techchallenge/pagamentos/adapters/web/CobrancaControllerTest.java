@@ -28,7 +28,9 @@ import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getCobra
 import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getCriaCobrancaDTO;
 import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getStatusPagamentoPagoDTO;
 import static br.com.fiap.techchallenge.pagamentos.utils.JsonToStringHelper.asJsonString;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -160,23 +162,22 @@ class CobrancaControllerTest {
         }
 
         @Test
-        void AtualizaStatusDaCobrancaNoWebHookDoMercadoPagoParaAprovado() throws Exception {
+        void atualizaStatusDaCobrancaNoWebHookDoMercadoPagoParaAprovado() throws Exception {
             var id = 1L;
             var cobrancaDTO = getCobrancaDTO();
             var data = new WebhookDataRequest(2L);
             var statusPagamentoDTO = getStatusPagamentoPagoDTO();
             var request = new WebhookStatusCobrancaRequest("approved", data);
 
-            when(buscaStatusPagamentoInputPort.buscaStatus(ArgumentMatchers.anyLong()))
+            when(buscaStatusPagamentoInputPort.buscaStatus(anyLong()))
                     .thenReturn(statusPagamentoDTO);
 
-            when(atualizaStatusCobrancaInputPort.atualizarStatus(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+            when(atualizaStatusCobrancaInputPort.atualizarStatus(anyLong(), ArgumentMatchers.any()))
                     .thenReturn(cobrancaDTO);
 
             mockMvc.perform(post("/cobrancas/{id}/webhook-status", id, request)
                     .contentType(MediaType.APPLICATION_JSON)
             ).andReturn().getResponse().getContentAsString();
-
         }
 
     }

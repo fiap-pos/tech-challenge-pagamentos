@@ -5,7 +5,6 @@ import br.com.fiap.techchallenge.pagamentos.core.port.in.CriaCobrancaInputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.out.BuscaCobrancaOutputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.out.CriaCobrancaOutputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.out.CriaQrCodeOutputPort;
-//import br.com.fiap.techchallenge.pagamentos.core.port.out.pedido.BuscarPedidoPorIdOutputPort;
 import br.com.fiap.techchallenge.pagamentos.core.usecase.CriaCobrancaUseCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,9 +36,6 @@ class CriaCobrancaUseCaseTest {
     @Mock
     CriaQrCodeOutputPort criaQrCodeOutputPort;
 
-//    @Mock
-//    BuscarPedidoPorIdOutputPort buscarPedidoPorIdOutputPort;
-
     @Mock
     BuscaCobrancaOutputPort buscaCobrancaOutputPort;
 
@@ -68,11 +64,9 @@ class CriaCobrancaUseCaseTest {
         void criarCobranca() {
             var criaCobrancaDTO = getCriaCobrancaDTO();
             var cobrancaDTO = getCobrancaDTO();
-//            var pedidoDTO = getPedidoDTO();
             var qrCode = getQrCode();
 
             when(cobrancaOutputPort.criar(any(CobrancaDTO.class))).thenReturn(cobrancaDTO);
-//            when(buscarPedidoPorIdOutputPort.buscarPorId(anyLong())).thenReturn(pedidoDTO);
             when(criaQrCodeOutputPort.criar(anyLong(), any(BigDecimal.class))).thenReturn(qrCode);
 
             var cobrancaCriada = criaCobrancaInputPort.criar(criaCobrancaDTO);
@@ -86,9 +80,6 @@ class CriaCobrancaUseCaseTest {
 
             verify(cobrancaOutputPort, times(1)).criar(any(CobrancaDTO.class));
             verifyNoMoreInteractions(cobrancaOutputPort);
-
-//            verify(buscarPedidoPorIdOutputPort, times(1)).buscarPorId(anyLong());
-//            verifyNoMoreInteractions(buscarPedidoPorIdOutputPort);
 
             verify(criaQrCodeOutputPort, times(1)).criar(anyLong(), any(BigDecimal.class));
             verifyNoMoreInteractions(criaQrCodeOutputPort);

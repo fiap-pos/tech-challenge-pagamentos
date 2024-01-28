@@ -6,6 +6,7 @@ import br.com.fiap.techchallenge.pagamentos.adapters.repository.model.Cobranca;
 import br.com.fiap.techchallenge.pagamentos.adapters.repository.sqs.CobrancaSqsPublisher;
 import br.com.fiap.techchallenge.pagamentos.core.domain.exception.EntityNotFoundException;
 import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusEnum;
+import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,22 +17,23 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getCobranca;
+import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getCobrancaDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class CobrancaRepositoryTest {
-
     @Mock
+    CobrancaRepository cobrancaRepository;
+
     CobrancaJpaRepository cobrancaJpaRepository;
 
-    @Mock
     CobrancaMapper cobrancaMapper;
 
-    @Mock
     CobrancaSqsPublisher cobrancaSqsPublisher;
 
     AutoCloseable openMocks;
@@ -39,7 +41,6 @@ class CobrancaRepositoryTest {
     @BeforeEach
     void setup() {
         openMocks = MockitoAnnotations.openMocks(this);
-        var cobrancaRepository = new CobrancaRepository(cobrancaJpaRepository,cobrancaMapper, cobrancaSqsPublisher);
     }
 
     @AfterEach
@@ -48,77 +49,70 @@ class CobrancaRepositoryTest {
     }
     @Test
     void criar() {
-        var cobranca = getCobranca();
-        when(cobrancaJpaRepository.save(cobranca)).thenReturn(cobranca);
+        var cobranca = getCobrancaDTO();
+        when(cobrancaRepository.criar(any(CobrancaDTO.class))).thenReturn(cobranca);
 
-        var cobrancaSalvo = cobrancaJpaRepository.save(cobranca);
-        verify(cobrancaJpaRepository, times(1)).save(cobranca);
+        var cobrancaSalva = cobrancaRepository.criar(cobranca);
+        verify(cobrancaRepository, times(1)).criar(cobranca);
 
-        assertThat(cobrancaSalvo).isNotNull().isEqualTo(cobranca);
-        assertThat(cobrancaSalvo.getPedidoId()).isEqualTo(cobranca.getPedidoId());
-        assertThat(cobrancaSalvo.getId()).isEqualTo(cobranca.getId());
-        assertThat(cobrancaSalvo.getStatus()).isEqualTo(cobranca.getStatus());
-        assertThat(cobrancaSalvo.getQrCode()).isEqualTo(cobranca.getQrCode());
+        assertThat(cobrancaSalva).isNotNull().isEqualTo(cobranca);
+        assertThat(cobrancaSalva.pedidoId()).isEqualTo(cobranca.pedidoId());
+        assertThat(cobrancaSalva.id()).isEqualTo(cobranca.id());
+        assertThat(cobrancaSalva.status()).isEqualTo(cobranca.status());
+        assertThat(cobrancaSalva.qrCode()).isEqualTo(cobranca.qrCode());
     }
 
     @Test
     void buscarPorId() {
-        var cobranca = getCobranca();
-        when(cobrancaJpaRepository.findById(anyLong())).thenReturn(Optional.of(cobranca));
+        var cobrancaDTO = getCobrancaDTO();
+        when(cobrancaRepository.buscarPorId(anyLong())).thenReturn(cobrancaDTO);
 
-        var cobrancaOptional = cobrancaJpaRepository.findById(cobranca.getId());
-        verify(cobrancaJpaRepository, times(1)).findById(cobranca.getId());
+        var cobrancaBuscada = cobrancaRepository.buscarPorId(cobrancaDTO.id());
+        verify(cobrancaRepository, times(1)).buscarPorId(cobrancaDTO.id());
 
-        assertThat(cobrancaOptional).isPresent().containsSame(cobranca);
-
-        cobrancaOptional.ifPresent(cobrancaSalva -> {
-            assertThat(cobrancaSalva.getId()).isEqualTo(cobranca.getId());
-            assertThat(cobrancaSalva.getPedidoId()).isEqualTo(cobranca.getPedidoId());
-            assertThat(cobrancaSalva.getStatus()).isEqualTo(cobranca.getStatus());
-            assertThat(cobrancaSalva.getStatus()).isEqualTo(cobranca.getStatus());
-        });
+        assertThat(cobrancaBuscada.id()).isEqualTo(cobrancaDTO.id());
+        assertThat(cobrancaBuscada.pedidoId()).isEqualTo(cobrancaDTO.pedidoId());
+        assertThat(cobrancaBuscada.status()).isEqualTo(cobrancaDTO.status());
+        assertThat(cobrancaBuscada.qrCode()).isEqualTo(cobrancaDTO.qrCode());
     }
     @Test
     void buscarPorIdInexistente() {
         var id = 7L;
-        when(cobrancaJpaRepository.findById(id)).thenThrow(EntityNotFoundException.class);
+        when(cobrancaRepository.buscarPorId(anyLong())).thenThrow(EntityNotFoundException.class);
 
-        assertThrows(EntityNotFoundException.class, () -> cobrancaJpaRepository.findById(id),"Cobrança com o id " + id + " não existe");
+        assertThrows(EntityNotFoundException.class, () -> cobrancaRepository.buscarPorId(id),"Cobrança com o id " + id + " não existe");
     }
 
     @Test
     void buscarPorPedidoId() {
-        var cobranca = getCobranca();
-        when(cobrancaJpaRepository.findFirstByPedidoIdOrderByCreatedAtDesc(anyLong())).thenReturn(Optional.of(cobranca));
+        var cobrancaDTO = getCobrancaDTO();
+        when(cobrancaRepository.buscarPorPedidoId(anyLong())).thenReturn(cobrancaDTO);
 
-        var cobrancaOptional = cobrancaJpaRepository.findFirstByPedidoIdOrderByCreatedAtDesc(cobranca.getPedidoId());
-        verify(cobrancaJpaRepository, times(1)).findFirstByPedidoIdOrderByCreatedAtDesc(cobranca.getPedidoId());
+        var cobrancaBuscada = cobrancaRepository.buscarPorPedidoId(cobrancaDTO.pedidoId());
+        verify(cobrancaRepository, times(1)).buscarPorPedidoId(cobrancaDTO.pedidoId());
 
-        assertThat(cobrancaOptional).isPresent().containsSame(cobranca);
 
-        cobrancaOptional.ifPresent(cobrancaSalva -> {
-            assertThat(cobrancaSalva.getId()).isEqualTo(cobranca.getId());
-            assertThat(cobrancaSalva.getPedidoId()).isEqualTo(cobranca.getPedidoId());
-            assertThat(cobrancaSalva.getStatus()).isEqualTo(cobranca.getStatus());
-            assertThat(cobrancaSalva.getStatus()).isEqualTo(cobranca.getStatus());
-        });
+        assertThat(cobrancaBuscada.id()).isEqualTo(cobrancaDTO.id());
+        assertThat(cobrancaBuscada.pedidoId()).isEqualTo(cobrancaDTO.pedidoId());
+        assertThat(cobrancaBuscada.status()).isEqualTo(cobrancaDTO.status());
+        assertThat(cobrancaBuscada.qrCode()).isEqualTo(cobrancaDTO.qrCode());
     }
 
     @Test
     void buscarPorPedidoIdInexistente() {
         var id = 7L;
-        when(cobrancaJpaRepository.findFirstByPedidoIdOrderByCreatedAtDesc(id)).thenThrow(EntityNotFoundException.class);
+        when(cobrancaRepository.buscarPorPedidoId(anyLong())).thenThrow(EntityNotFoundException.class);
 
-        assertThrows(EntityNotFoundException.class, () -> cobrancaJpaRepository.findFirstByPedidoIdOrderByCreatedAtDesc(id),"Cobrança com o pedidoId " + id + " não existe");
+        assertThrows(EntityNotFoundException.class, () -> cobrancaRepository.buscarPorPedidoId(id),"Cobrança com o pedidoId " + id + " não existe");
     }
 
     @Test
     void pedidoPossuiCobranca() {
-        var cobranca = getCobranca();
-        when(cobrancaJpaRepository.existsCobrancaByPedidoId(anyLong())).thenReturn(true);
+        var cobranca = getCobrancaDTO();
+        when(cobrancaRepository.pedidoPossuiCobranca(anyLong())).thenReturn(true);
 
-        var existe = cobrancaJpaRepository.existsCobrancaByPedidoId(cobranca.getPedidoId());
-        verify(cobrancaJpaRepository, times(1)).existsCobrancaByPedidoId(cobranca.getPedidoId());
+        var existe = cobrancaRepository.pedidoPossuiCobranca(cobranca.pedidoId());
+        verify(cobrancaRepository, times(1)).pedidoPossuiCobranca(cobranca.pedidoId());
 
         assertThat(existe).isTrue();
     }

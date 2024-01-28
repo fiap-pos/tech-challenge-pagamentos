@@ -1,6 +1,9 @@
 package br.com.fiap.techchallenge.pagamentos.core.usecases;
 
+import br.com.fiap.techchallenge.pagamentos.core.domain.exception.EntityAlreadyExistException;
+import br.com.fiap.techchallenge.pagamentos.core.domain.exception.EntityNotFoundException;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
+import br.com.fiap.techchallenge.pagamentos.core.dto.CriaCobrancaDTO;
 import br.com.fiap.techchallenge.pagamentos.core.port.in.CriaCobrancaInputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.out.BuscaCobrancaOutputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.out.CriaCobrancaOutputPort;
@@ -10,7 +13,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
@@ -19,6 +24,7 @@ import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getCobra
 import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getCriaCobrancaDTO;
 import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getQrCode;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -28,7 +34,8 @@ import static org.mockito.Mockito.when;
 
 class CriaCobrancaUseCaseTest {
 
-    private CriaCobrancaInputPort criaCobrancaInputPort;
+    @InjectMocks
+    CriaCobrancaUseCase criaCobrancaUseCase;
 
     @Mock
     CriaCobrancaOutputPort cobrancaOutputPort;
@@ -44,11 +51,6 @@ class CriaCobrancaUseCaseTest {
     @BeforeEach
     void setUp() {
         mock = MockitoAnnotations.openMocks(this);
-        criaCobrancaInputPort = new CriaCobrancaUseCase(
-                cobrancaOutputPort,
-                criaQrCodeOutputPort,
-                buscaCobrancaOutputPort
-        );
     }
 
     @AfterEach
@@ -69,7 +71,7 @@ class CriaCobrancaUseCaseTest {
             when(cobrancaOutputPort.criar(any(CobrancaDTO.class))).thenReturn(cobrancaDTO);
             when(criaQrCodeOutputPort.criar(anyLong(), any(BigDecimal.class))).thenReturn(qrCode);
 
-            var cobrancaCriada = criaCobrancaInputPort.criar(criaCobrancaDTO);
+            var cobrancaCriada = criaCobrancaUseCase.criar(criaCobrancaDTO);
 
             assertThat(cobrancaCriada).isNotNull();
             assertThat(cobrancaCriada.id()).isEqualTo(cobrancaDTO.id());
@@ -84,6 +86,16 @@ class CriaCobrancaUseCaseTest {
             verify(criaQrCodeOutputPort, times(1)).criar(anyLong(), any(BigDecimal.class));
             verifyNoMoreInteractions(criaQrCodeOutputPort);
         }
+    }
 
+    @Test
+    void validaExisteCobranca() {
+        var criaCobrancaDTO = getCriaCobrancaDTO();
+        var pedidoId = criaCobrancaDTO.pedidoId();
+
+        when(buscaCobrancaOutputPort.pedidoPossuiCobranca(pedidoId)).thenReturn(true);
+
+        assertThrows(EntityAlreadyExistException.class,() -> criaCobrancaUseCase.criar(criaCobrancaDTO),"Já existe uma cobrança para o pedido " + pedidoId);
+        verify(buscaCobrancaOutputPort).pedidoPossuiCobranca(Mockito.<Long>any());
     }
 }

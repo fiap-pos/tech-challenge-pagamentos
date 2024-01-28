@@ -6,11 +6,4 @@ public class EntityAlreadyExistException extends RuntimeException {
         super(message);
     }
 
-    public EntityAlreadyExistException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
-
-    public EntityAlreadyExistException(Throwable throwable) {
-        super(throwable);
-    }
 }

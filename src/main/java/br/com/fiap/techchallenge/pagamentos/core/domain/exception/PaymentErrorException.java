@@ -5,10 +5,6 @@ public class PaymentErrorException extends RuntimeException{
         super(message);
     }
 
-    public PaymentErrorException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     public PaymentErrorException(Throwable cause) {
         super(cause);
     }

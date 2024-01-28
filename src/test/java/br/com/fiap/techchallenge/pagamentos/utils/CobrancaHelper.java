@@ -15,18 +15,19 @@ public abstract class CobrancaHelper {
     private static final Long ID = 1L;
     private static final Long PEDIDO_ID = 1L;
     private static final BigDecimal VALOR = BigDecimal.valueOf(45.9);
-    private static final StatusEnum STATUS = StatusEnum.PAGO;
+    private static final StatusEnum PAGO = StatusEnum.PAGO;
+    private static final StatusEnum PENDENTE = StatusEnum.PENDENTE;
     private static final QrCode QR_CODE = new QrCode("e3BlZGlkb0lkOjEsdmFsb3I6NDUuOX0=");
 
     private static final LocalDateTime CREATED_AT = LocalDateTime.MAX;
     private static final LocalDateTime UPDATED_AT = LocalDateTime.MAX;
 
     public static CobrancaDTO getCobrancaDTO() {
-        return new CobrancaDTO(ID, PEDIDO_ID, VALOR, STATUS, QR_CODE.getDecodedBase64Value());
+        return new CobrancaDTO(ID, PEDIDO_ID, VALOR, PAGO, QR_CODE.getDecodedBase64Value());
     }
 
     public static Cobranca getCobranca() {
-        return new Cobranca(ID, PEDIDO_ID, STATUS, VALOR, QR_CODE.getDecodedBase64Value(), CREATED_AT, UPDATED_AT);
+        return new Cobranca(ID, PEDIDO_ID, PAGO, VALOR, QR_CODE.getDecodedBase64Value(), CREATED_AT, UPDATED_AT);
     }
 
     public static CriaCobrancaDTO getCriaCobrancaDTO() {
@@ -51,5 +52,9 @@ public abstract class CobrancaHelper {
                 StatusEnum.PENDENTE,
                 cobrancaDTO.qrCode()
         );
+    }
+
+    public static Cobranca getCobrancacomStatusPendente() {
+        return new Cobranca(ID, PEDIDO_ID, PENDENTE, VALOR, QR_CODE.getDecodedBase64Value(), CREATED_AT, UPDATED_AT);
     }
 }

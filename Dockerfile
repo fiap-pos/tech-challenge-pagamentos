@@ -1,4 +1,4 @@
-FROM maven:3.9.2-eclipse-temurin-17-alpine@sha256:4d9daa0d5471f52a318df5c4aa9d3ab6d5ade68bb5421a4844090cf5b140fbb2 AS build
+FROM maven:3.9.6-amazoncorretto-17 build
 RUN mkdir /app
 WORKDIR /app
 COPY . /app

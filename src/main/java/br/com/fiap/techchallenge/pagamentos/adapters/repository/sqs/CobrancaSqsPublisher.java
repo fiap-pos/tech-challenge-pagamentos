@@ -1,10 +1,10 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.repository.sqs;
 
+import br.com.fiap.techchallenge.pagamentos.core.domain.exception.PaymentErrorException;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class CobrancaSqsPublisher  {
         try {
             mensagem = mapper.writeValueAsString(cobranca);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new PaymentErrorException(e);
         }
         sqsTemplate.send(filaPagamentos, mensagem);
     }

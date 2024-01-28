@@ -49,7 +49,7 @@ public class StatusPagamento implements BuscaStatusPagamentoOutputPort {
 
             return statusPedidoMercadoPago.toStatusPagamentoDTO();
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new PaymentErrorException(ex);
         }
     }
 }

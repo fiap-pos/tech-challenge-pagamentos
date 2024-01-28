@@ -85,7 +85,7 @@ public class CobrancaController extends ControllerBase {
         ResponseEntity<Object> response = ResponseEntity.ok().build();
 
         if (request.getAction().contains("created")) {
-            logger.info(String.format("Pagamento com id: %s criado\n", id));
+            logger.info(String.format("Pagamento com id: %s criado", id));
             return response;
         }
 

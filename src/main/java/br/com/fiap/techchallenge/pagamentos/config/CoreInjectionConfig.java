@@ -52,9 +52,4 @@ public class CoreInjectionConfig {
     BuscaStatusPagamentoInputPort buscaStatusPagamento(BuscaStatusPagamentoOutputPort buscaStatusPagamentoOutputPort) {
         return new BuscaStatusPagamentoUseCase(buscaStatusPagamentoOutputPort);
     }
-
-//    @Bean
-//    EnviaMensagemInputPort enviaMensagem(EnviaMensagemOutputPort enviaMensagemOutputPort){
-//        return new EnviaMensagemUseCase(enviaMensagemOutputPort);
-//    }
 }

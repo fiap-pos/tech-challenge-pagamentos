@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class StatusPagamento implements BuscaStatusPagamentoOutputPort {
 
     @Value("${mercadopago.api.url}")
-    private String UrlMercadoPagoApiPagamentos;
+    private String urlMercadoPagoApiPagamentos;
 
     @Value("${mercadopago.api.token}")
     private String token;
@@ -33,7 +33,7 @@ public class StatusPagamento implements BuscaStatusPagamentoOutputPort {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         Request request = new Request.Builder()
-                .url(UrlMercadoPagoApiPagamentos + id)
+                .url(urlMercadoPagoApiPagamentos + id)
                 .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .build();
 

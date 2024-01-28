@@ -52,4 +52,4 @@ jobs:
         with:
           name: test-report
           path: target/surefire-reports
-          reporter: java-unit
+          reporter: java-junit

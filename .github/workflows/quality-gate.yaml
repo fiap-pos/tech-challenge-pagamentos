@@ -45,11 +45,3 @@ jobs:
         with:
           name: coverage-report
           path: target/site/jacoco/jacoco.xml
-
-      - name: Publish test results
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: test-report
-          path: target/surefire-reports
-          reporter: java-junit

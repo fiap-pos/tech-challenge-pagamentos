@@ -5,7 +5,7 @@ import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
 import org.springframework.stereotype.Component;
 
-@Component("CobrancaMapperWeb")
+@Component("cobrancaMapperWeb")
 public class CobrancaMapper {
     public CobrancaResponse toCobrancaResponse(CobrancaDTO cobrancaOut) {
         QrCode qrCode = new QrCode(cobrancaOut.qrCode());

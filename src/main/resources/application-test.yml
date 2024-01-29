@@ -1,0 +1,38 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: never
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: ${DB_USER:root}
+    password: ${DB_PASS:123456}
+    driver-class-name: org.h2.Driver
+  jackson:
+    default-property-inclusion: non_null
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+      hibernate: ERROR
+pagamentos:
+  openapi:
+    dev-url: http://localhost:8084
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+mercadopago:
+  api:
+    url: ${MERCADOPAGO_URL_PAGAMENTOS:https://api.mercadopago.com/merchant_orders/}
+    token: ${AUTHORIZATION_TOKEN_MERCADOPAGO:TEST-1391732842356404-082915-54d1af5cde66c321c38bddda2f7da865-92326974}

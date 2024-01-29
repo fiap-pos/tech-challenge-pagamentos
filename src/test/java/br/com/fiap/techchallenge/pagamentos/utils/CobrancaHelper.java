@@ -20,8 +20,8 @@ public abstract class CobrancaHelper {
     private static final StatusEnum PENDENTE = StatusEnum.PENDENTE;
     private static final QrCode QR_CODE = new QrCode("e3BlZGlkb0lkOjEsdmFsb3I6NDUuOX0=");
 
-    private static final LocalDateTime CREATED_AT = LocalDateTime.MAX;
-    private static final LocalDateTime UPDATED_AT = LocalDateTime.MAX;
+    private static final LocalDateTime CREATED_AT = LocalDateTime.now();
+    private static final LocalDateTime UPDATED_AT = LocalDateTime.now();
 
     public static CobrancaDTO getCobrancaDTO() {
         return new CobrancaDTO(ID, PEDIDO_ID, VALOR, PAGO, QR_CODE.getDecodedBase64Value());

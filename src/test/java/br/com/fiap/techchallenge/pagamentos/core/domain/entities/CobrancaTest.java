@@ -20,5 +20,4 @@ class CobrancaTest {
         assertThat(cobranca.getQrCode()).isEqualTo(QrCode);
 
     }
-
 }

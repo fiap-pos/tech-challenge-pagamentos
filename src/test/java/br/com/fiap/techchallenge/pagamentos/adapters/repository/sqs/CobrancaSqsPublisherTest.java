@@ -52,18 +52,4 @@ public class CobrancaSqsPublisherTest {
 
         verify(sqsTemplate).send(Mockito.<String>any(), Mockito.<String>any());
     }
-
-    @Test
-    void testEnviarParaFilaPagamentos2() {
-        UUID messageId = UUID.randomUUID();
-        GenericMessage<String> message = new GenericMessage<>("Payload", new HashMap<>());
-        CobrancaDTO cobrancaDTO = getCobrancaDTO();
-        when(sqsTemplate.send(Mockito.<String>any(), Mockito.<String>any()))
-                .thenReturn(new SendResult<>(messageId, "https://config.us-east-2.amazonaws.com", message, new HashMap<>()));
-
-        cobrancaSqsPublisher.enviarParaFilaPagamentos(cobrancaDTO);
-
-        verify(sqsTemplate).send(Mockito.<String>any(), Mockito.<String>any());
-    }
-
 }

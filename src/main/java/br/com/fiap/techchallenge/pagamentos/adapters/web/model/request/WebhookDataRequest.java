@@ -8,9 +8,7 @@ public class WebhookDataRequest {
     @NotNull
     @NotBlank
     private Long id;
-    public WebhookDataRequest(Long id) {
-        this.id = id;
-    }
+
     public Long getId() {
         return id;
     }

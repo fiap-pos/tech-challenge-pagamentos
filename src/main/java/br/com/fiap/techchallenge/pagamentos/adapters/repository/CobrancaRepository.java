@@ -63,6 +63,7 @@ public class CobrancaRepository implements CriaCobrancaOutputPort, BuscaCobranca
     }
 
     private Cobranca buscaCobrancaPorId(Long id) {
-        return cobrancaJpaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cobrança com o id " + id + " não existe"));
+        return cobrancaJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cobrança com o id " + id + " não existe"));
     }
 }

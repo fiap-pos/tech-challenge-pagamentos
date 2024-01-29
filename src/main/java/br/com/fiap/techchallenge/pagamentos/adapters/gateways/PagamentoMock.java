@@ -6,6 +6,7 @@ import br.com.fiap.techchallenge.pagamentos.core.port.out.CriaQrCodeOutputPort;
 import java.math.BigDecimal;
 
 public class PagamentoMock implements CriaQrCodeOutputPort {
+
     @Override
     public QrCode criar(Long pedidoId, BigDecimal valor) {
         return new QrCode(

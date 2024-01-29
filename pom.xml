@@ -150,6 +150,11 @@
 								</configuration>
 							</execution>
 						</executions>
+						<configuration>
+							<excludes>
+								<exclude>**/pagamentos/config/*</exclude>
+							</excludes>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

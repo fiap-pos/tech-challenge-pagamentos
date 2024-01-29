@@ -5,25 +5,37 @@ import br.com.fiap.techchallenge.pagamentos.adapters.web.model.request.AtualizaS
 import br.com.fiap.techchallenge.pagamentos.adapters.web.model.request.CobrancaRequest;
 import br.com.fiap.techchallenge.pagamentos.adapters.web.model.request.WebhookDataRequest;
 import br.com.fiap.techchallenge.pagamentos.adapters.web.model.request.WebhookStatusCobrancaRequest;
+import br.com.fiap.techchallenge.pagamentos.core.domain.exception.BadRequestException;
 import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusEnum;
 import br.com.fiap.techchallenge.pagamentos.core.dto.AtualizaStatusCobrancaDTO;
+import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CriaCobrancaDTO;
+import br.com.fiap.techchallenge.pagamentos.core.dto.StatusPagamentoDTO;
 import br.com.fiap.techchallenge.pagamentos.core.port.in.AtualizaStatusCobrancaInputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.in.BuscaCobrancaPorIdInputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.in.BuscaStatusPagamentoInputPort;
 import br.com.fiap.techchallenge.pagamentos.core.port.in.CriaCobrancaInputPort;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
+
+import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getAtualizaStatusCobrancaDTO;
 import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getCobrancaDTO;
 import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getCriaCobrancaDTO;
 import static br.com.fiap.techchallenge.pagamentos.utils.CobrancaHelper.getStatusPagamentoPagoDTO;
@@ -31,6 +43,7 @@ import static br.com.fiap.techchallenge.pagamentos.utils.JsonToStringHelper.asJs
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -162,22 +175,52 @@ class CobrancaControllerTest {
         }
 
         @Test
-        void atualizaStatusDaCobrancaNoWebHookDoMercadoPagoParaAprovado() throws Exception {
-            var id = 1L;
+        void atualizaWebhookStatusParaAprovado() throws Exception {
+            var webhookDataRequest = new WebhookDataRequest();
+            var webhookStatusCobrancaRequest = new WebhookStatusCobrancaRequest("accepted", webhookDataRequest);
+            var statusDTO = getStatusPagamentoPagoDTO();
             var cobrancaDTO = getCobrancaDTO();
-            var data = new WebhookDataRequest(2L);
-            var statusPagamentoDTO = getStatusPagamentoPagoDTO();
-            var request = new WebhookStatusCobrancaRequest("approved", data);
+            ObjectMapper objectMapper = new ObjectMapper();
 
-            when(buscaStatusPagamentoInputPort.buscaStatus(anyLong()))
-                    .thenReturn(statusPagamentoDTO);
-
-            when(atualizaStatusCobrancaInputPort.atualizarStatus(anyLong(), ArgumentMatchers.any()))
-                    .thenReturn(cobrancaDTO);
-
-            mockMvc.perform(post("/cobrancas/{id}/webhook-status", id, request)
+            when(buscaStatusPagamentoInputPort.buscaStatus(anyLong())).thenReturn(statusDTO);
+            when(atualizaStatusCobrancaInputPort.atualizarStatus(anyLong(), any(AtualizaStatusCobrancaDTO.class))).thenReturn(cobrancaDTO);
+            mockMvc.perform(post("/cobrancas/{id}/webhook-status", 1L)
                     .contentType(MediaType.APPLICATION_JSON)
-            ).andReturn().getResponse().getContentAsString();
+                    .content(objectMapper.writeValueAsString(webhookStatusCobrancaRequest))
+            ).andExpect(status().isOk());
+        }
+
+        @Test
+        void atualizaWebhookStatusParaCancelado() throws Exception {
+            var webhookDataRequest = new WebhookDataRequest();
+            var webhookStatusCobrancaRequest = new WebhookStatusCobrancaRequest("rejected", webhookDataRequest);
+            var statusDTO = getStatusPagamentoPagoDTO();
+            var cobrancaDTO = getCobrancaDTO();
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            when(buscaStatusPagamentoInputPort.buscaStatus(anyLong())).thenReturn(statusDTO);
+            when(atualizaStatusCobrancaInputPort.atualizarStatus(anyLong(), any(AtualizaStatusCobrancaDTO.class))).thenReturn(cobrancaDTO);
+            mockMvc.perform(post("/cobrancas/{id}/webhook-status", 1L)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(webhookStatusCobrancaRequest))
+            ).andExpect(status().isOk());
+        }
+
+        @Test
+        void atualizaWebhookStatusComErro() throws Exception {
+            var webhookDataRequest = new WebhookDataRequest();
+            var webhookStatusCobrancaRequest = new WebhookStatusCobrancaRequest("rejected", webhookDataRequest);
+            var statusDTO = getStatusPagamentoPagoDTO();
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            when(buscaStatusPagamentoInputPort.buscaStatus(anyLong())).thenReturn(statusDTO);
+            when(atualizaStatusCobrancaInputPort.atualizarStatus(anyLong(), any(AtualizaStatusCobrancaDTO.class)))
+                    .thenThrow(BadRequestException.class);
+
+            mockMvc.perform(post("/cobrancas/{id}/webhook-status", 1L)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(webhookStatusCobrancaRequest))
+            ).andExpect(status().is(200));
         }
 
     }

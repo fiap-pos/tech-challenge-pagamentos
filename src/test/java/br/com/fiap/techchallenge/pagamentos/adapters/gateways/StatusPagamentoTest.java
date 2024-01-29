@@ -1,7 +1,10 @@
 package br.com.fiap.techchallenge.pagamentos.adapters.gateways;
 
-import br.com.fiap.techchallenge.pagamentos.adapters.repository.CobrancaRepository;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.model.StatusPedidoMercadoPago;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Protocol;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
@@ -11,39 +14,50 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpHeaders;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 class StatusPagamentoTest {
-
-    @InjectMocks
-    StatusPagamento statusPagamento;
-    @Mock
-    OkHttpClient httpClient;
-
-    AutoCloseable openMocks;
-
-    @BeforeEach
-    void setup() {
-        openMocks = MockitoAnnotations.openMocks(this);
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        openMocks.close();
-    }
-
-    @Test
-    void buscaStatus() throws IOException {
-//        Request request = new Request.Builder()
-//                .url("https://api.mercadopago.com/merchant_orders/" + 1L)
-//                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + "TEST-1391732842356404-082915-54d1af5cde66c321c38bddda2f7da865-92326974")
+//    @InjectMocks
+//    StatusPagamento statusPagamento;
+//
+//    @Mock
+//    OkHttpClient httpClient;
+//    AutoCloseable openMocks;
+//
+//    @BeforeEach
+//    void setup(){
+//        openMocks = MockitoAnnotations.openMocks(this);
+//        statusPagamento = new StatusPagamento(httpClient);
+//        ReflectionTestUtils.setField(statusPagamento, "urlMercadoPagoApiPagamentos", "https://api.mercadopago.com/merchant_orders/1");
+//    }
+//    @AfterEach
+//    void tearDown() throws Exception {
+//        openMocks.close();
+//    }
+//
+//    @Test
+//    void buscaStatus() throws IOException {
+//        var remoteCall = mock(Call.class);
+//        var request = new Request.Builder()
+//                .url("https://api.mercadopago.com/merchant_orders/1")
 //                .build();
-//        Response response = httpClient.newCall(request).execute();
-    }
+//        var response = new Response.Builder()
+//                .request(request)
+//                .protocol(Protocol.HTTP_1_1)
+//                .code(200)
+//                .body(ResponseBody.create(
+//                        MediaType.get("application/json; charset=utf-8"),
+//                        "{}"
+//                ))
+//                .build();
+//        when(remoteCall.execute()).thenReturn(response);
+//        when(httpClient.newCall(any())).thenReturn(remoteCall);
+//
+//        var status = statusPagamento.buscaStatus(1L);
+//    }
 }

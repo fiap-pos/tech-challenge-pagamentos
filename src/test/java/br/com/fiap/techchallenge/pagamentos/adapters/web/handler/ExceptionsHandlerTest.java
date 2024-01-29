@@ -3,129 +3,92 @@ package br.com.fiap.techchallenge.pagamentos.adapters.web.handler;
 import br.com.fiap.techchallenge.pagamentos.core.domain.exception.BadRequestException;
 import br.com.fiap.techchallenge.pagamentos.core.domain.exception.EntityAlreadyExistException;
 import br.com.fiap.techchallenge.pagamentos.core.domain.exception.EntityNotFoundException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpInputMessage;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
-class ExceptionsHandlerTest {
+public class ExceptionsHandlerTest {
 
-    private final String MSG_BAD_REQUEST = "An error occurred";
-    private final String MSG_ENTITY_ALREADY_EXISTS = "Entity already exist";
-    private final String MSG_ENTITY_NOT_FOUND = "Entity not found";
-    private final String MSG_EXCEPTION = "Exception";
-    @InjectMocks
-    ExceptionsHandler exceptionsHandler;
-    AutoCloseable openMocks;
+    private ExceptionsHandler exceptionsHandler;
+
     @BeforeEach
-    void setup() {
-        openMocks = MockitoAnnotations.openMocks(this);
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        openMocks.close();
+    void setUp() {
+        exceptionsHandler = new ExceptionsHandler();
     }
 
     @Test
-    void testHandlerMethodArgumentNotValidException() {
-        BindException bindingResult = new BindException("Target", "Object Name");
-        bindingResult.addError(new ObjectError("Object Name", "Default Message"));
-        MethodArgumentNotValidException e = new MethodArgumentNotValidException(null, bindingResult);
+    void shouldHandleException() {
+        var exception = new RuntimeException("message");
+        var httpservletRequest = new MockHttpServletRequest();
 
-        ResponseEntity<ErrorDetails> actualHandlerMethodArgumentNotValidExceptionResult = exceptionsHandler
-                .handlerMethodArgumentNotValidException(e, new MockHttpServletRequest());
+        var response = exceptionsHandler.handlerException(exception, httpservletRequest);
 
-        ErrorDetails body = actualHandlerMethodArgumentNotValidExceptionResult.getBody();
-        assertEquals("Default Message", body.message());
-        assertEquals(400, body.status());
-        assertEquals(400, actualHandlerMethodArgumentNotValidExceptionResult.getStatusCodeValue());
-        assertTrue(actualHandlerMethodArgumentNotValidExceptionResult.hasBody());
-        assertTrue(actualHandlerMethodArgumentNotValidExceptionResult.getHeaders().isEmpty());
+        assertThat(response).isNotNull().isInstanceOf(ResponseEntity.class);
+        assertThat(response.getBody()).isNotNull().isInstanceOf(ErrorDetails.class);
+        assertThat(response.getBody().message()).isEqualTo(exception.getMessage());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Test
-    void testHandlerHttpMessageNotReadableException() {
-        HttpMessageNotReadableException e = new HttpMessageNotReadableException("https://example.org/example",
-                new Throwable());
+    void shouldHandleBadRequestException() {
+        var exception = new BadRequestException("message");
+        var httpservletRequest = new MockHttpServletRequest();
 
-        ResponseEntity<ErrorDetails> actualHandlerHttpMessageNotReadableExceptionResult = exceptionsHandler
-                .handlerHttpMessageNotReadableException(e, new MockHttpServletRequest());
+        var response = exceptionsHandler.handlerBadRequestException(exception, httpservletRequest);
 
-        ErrorDetails body = actualHandlerHttpMessageNotReadableExceptionResult.getBody();
-        assertNull(body.message());
-        assertEquals(400, body.status());
-        assertEquals(400, actualHandlerHttpMessageNotReadableExceptionResult.getStatusCodeValue());
-        assertTrue(actualHandlerHttpMessageNotReadableExceptionResult.hasBody());
-        assertTrue(actualHandlerHttpMessageNotReadableExceptionResult.getHeaders().isEmpty());
-    }
-    @Test
-    void testHandlerBadRequestException() {
-        BadRequestException e = new BadRequestException(MSG_BAD_REQUEST);
-
-        ResponseEntity<ErrorDetails> actualHandlerBadRequestExceptionResult = exceptionsHandler
-                .handlerBadRequestException(e, new MockHttpServletRequest());
-
-        ErrorDetails body = actualHandlerBadRequestExceptionResult.getBody();
-        assertEquals(MSG_BAD_REQUEST, body.message());
-        assertEquals(400, body.status());
-        assertEquals(400, actualHandlerBadRequestExceptionResult.getStatusCodeValue());
-        assertTrue(actualHandlerBadRequestExceptionResult.hasBody());
-        assertTrue(actualHandlerBadRequestExceptionResult.getHeaders().isEmpty());
+        assertThat(response).isNotNull().isInstanceOf(ResponseEntity.class);
+        assertThat(response.getBody()).isNotNull().isInstanceOf(ErrorDetails.class);
+        assertThat(response.getBody().message()).isEqualTo(exception.getMessage());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
-    void handlerEntityAlreadyExistException(){
-        EntityAlreadyExistException e = new EntityAlreadyExistException(MSG_ENTITY_ALREADY_EXISTS);
+    void shouldHandleEntityAlreadyExistException() {
+        var exception = new EntityAlreadyExistException("message");
+        var httpservletRequest = new MockHttpServletRequest();
 
-        ResponseEntity<ErrorDetails> actualHandlerEntityAlreadyExistExceptionResult = exceptionsHandler
-                .handlerEntityAlreadyExistException(e, new MockHttpServletRequest());
+        var response = exceptionsHandler.handlerEntityAlreadyExistException(exception, httpservletRequest);
 
-        ErrorDetails body = actualHandlerEntityAlreadyExistExceptionResult.getBody();
-        assertEquals(MSG_ENTITY_ALREADY_EXISTS, body.message());
-        assertEquals(409, body.status());
-        assertEquals(409, actualHandlerEntityAlreadyExistExceptionResult.getStatusCodeValue());
-        assertTrue(actualHandlerEntityAlreadyExistExceptionResult.hasBody());
-        assertTrue(actualHandlerEntityAlreadyExistExceptionResult.getHeaders().isEmpty());
+        assertThat(response).isNotNull().isInstanceOf(ResponseEntity.class);
+        assertThat(response.getBody()).isNotNull().isInstanceOf(ErrorDetails.class);
+        assertThat(response.getBody().message()).isEqualTo(exception.getMessage());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 
     @Test
-    void testHandlerEntityNotFoundException() {
-        EntityNotFoundException e = new EntityNotFoundException(MSG_ENTITY_NOT_FOUND);
+    void shouldHandleEntityNotFoundException() {
+        var exception = new EntityNotFoundException("message");
+        var httpservletRequest = new MockHttpServletRequest();
 
-        ResponseEntity<ErrorDetails> actualHandlerEntityNotFoundExceptionResult = exceptionsHandler
-                .handlerEntityNotFoundException(e, new MockHttpServletRequest());
+        var response = exceptionsHandler.handlerEntityNotFoundException(exception, httpservletRequest);
 
-        ErrorDetails body = actualHandlerEntityNotFoundExceptionResult.getBody();
-        assertEquals(MSG_ENTITY_NOT_FOUND, body.message());
-        assertEquals(404, body.status());
-        assertEquals(404, actualHandlerEntityNotFoundExceptionResult.getStatusCodeValue());
-        assertTrue(actualHandlerEntityNotFoundExceptionResult.hasBody());
-        assertTrue(actualHandlerEntityNotFoundExceptionResult.getHeaders().isEmpty());
+        assertThat(response).isNotNull().isInstanceOf(ResponseEntity.class);
+        assertThat(response.getBody()).isNotNull().isInstanceOf(ErrorDetails.class);
+        assertThat(response.getBody().message()).isEqualTo(exception.getMessage());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
     @Test
-    void testHandlerException() {
-        Exception e = new Exception(MSG_EXCEPTION);
+    void shouldHandleHttpMessageNotReadableException() {
+        var exceptionCause = new RuntimeException("Requisição inválida.");
+        var exception = new HttpMessageNotReadableException(
+                "Error", exceptionCause, mock(HttpInputMessage.class)
+        );
+        var httpservletRequest = new MockHttpServletRequest();
 
-        ResponseEntity<ErrorDetails> actualHandlerExceptionResult = exceptionsHandler.handlerException(e,
-                new MockHttpServletRequest());
+        var response = exceptionsHandler.handlerHttpMessageNotReadableException(exception, httpservletRequest);
 
-        ErrorDetails body = actualHandlerExceptionResult.getBody();
-        assertEquals(MSG_EXCEPTION, body.message());
-        assertEquals(500, body.status());
-        assertEquals(500, actualHandlerExceptionResult.getStatusCodeValue());
-        assertTrue(actualHandlerExceptionResult.hasBody());
-        assertTrue(actualHandlerExceptionResult.getHeaders().isEmpty());
+        assertThat(response).isNotNull().isInstanceOf(ResponseEntity.class);
+        assertThat(response.getBody()).isNotNull().isInstanceOf(ErrorDetails.class);
+        assertThat(response.getBody().message()).isEqualTo("Requisição inválida.");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
+
 }

@@ -1,0 +1,13 @@
+package br.com.fiap.techchallenge.pagamentos;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class PagamentosApplicationTest {
+
+    @Test
+    void contextLoads() {
+    }
+
+}

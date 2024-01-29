@@ -3,6 +3,7 @@ package br.com.fiap.techchallenge.pagamentos.utils;
 import br.com.fiap.techchallenge.pagamentos.adapters.repository.model.Cobranca;
 import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
 import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusEnum;
+import br.com.fiap.techchallenge.pagamentos.core.dto.AtualizaStatusCobrancaDTO;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CobrancaDTO;
 import br.com.fiap.techchallenge.pagamentos.core.dto.CriaCobrancaDTO;
 import br.com.fiap.techchallenge.pagamentos.core.dto.StatusPagamentoDTO;
@@ -39,7 +40,6 @@ public abstract class CobrancaHelper {
     }
 
     public static QrCode getQrCode() {
-//        var pedidoDTO = getPedidoDTO();
         return new QrCode("{pedidoId:"+PEDIDO_ID+",valor:"+VALOR+"}");
     }
 
@@ -52,6 +52,10 @@ public abstract class CobrancaHelper {
                 StatusEnum.PENDENTE,
                 cobrancaDTO.qrCode()
         );
+    }
+
+    public static AtualizaStatusCobrancaDTO getAtualizaStatusCobrancaDTO(){
+        return new AtualizaStatusCobrancaDTO(PAGO);
     }
 
     public static Cobranca getCobrancacomStatusPendente() {

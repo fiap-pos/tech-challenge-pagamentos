@@ -1,6 +1,8 @@
 package br.com.fiap.techchallenge.pagamentos.utils;
 
 import br.com.fiap.techchallenge.pagamentos.adapters.repository.model.Cobranca;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.model.request.CobrancaRequest;
+import br.com.fiap.techchallenge.pagamentos.adapters.web.model.response.CobrancaResponse;
 import br.com.fiap.techchallenge.pagamentos.core.domain.entities.QrCode;
 import br.com.fiap.techchallenge.pagamentos.core.domain.models.enums.StatusEnum;
 import br.com.fiap.techchallenge.pagamentos.core.dto.AtualizaStatusCobrancaDTO;
@@ -60,5 +62,9 @@ public abstract class CobrancaHelper {
 
     public static Cobranca getCobrancacomStatusPendente() {
         return new Cobranca(ID, PEDIDO_ID, PENDENTE, VALOR, QR_CODE.getDecodedBase64Value(), CREATED_AT, UPDATED_AT);
+    }
+
+    public static CobrancaRequest getCobrancaRequest(){
+        return new CobrancaRequest(PEDIDO_ID, VALOR);
     }
 }

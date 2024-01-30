@@ -3,15 +3,23 @@
   "$id": "http://example.com/example.json",
   "type": "object",
   "required": [
-    "pedidoId",
-    "valor"
+    "pedidoId"
   ],
   "properties": {
+    "id": {
+      "type": "integer"
+    },
     "pedidoId": {
       "type": "integer"
     },
+    "status": {
+      "type": "string"
+    },
     "valor": {
       "type": "number"
+    },
+    "qrCode": {
+      "type": "string"
     }
   }
 }

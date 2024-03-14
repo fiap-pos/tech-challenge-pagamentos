@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Objects;
 
@@ -23,8 +24,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorDetails> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e,
-                                                                               HttpServletRequest request) {
+    public ResponseEntity<ErrorDetails> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
         var errorDetails = new ErrorDetails.Builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(e.getAllErrors().get(0).getDefaultMessage())
@@ -36,8 +36,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorDetails> handlerHttpMessageNotReadableException(HttpMessageNotReadableException e,
-                                                                               HttpServletRequest request) {
+    public ResponseEntity<ErrorDetails> handlerHttpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request) {
         var errorDetails = new ErrorDetails.Builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(Objects.requireNonNull(e.getRootCause()).getMessage())
@@ -61,8 +60,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(EntityAlreadyExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ErrorDetails> handlerEntityAlreadyExistException(EntityAlreadyExistException e,
-                                                                           HttpServletRequest request) {
+    public ResponseEntity<ErrorDetails> handlerEntityAlreadyExistException(EntityAlreadyExistException e, HttpServletRequest request) {
         var errorDetails = new ErrorDetails.Builder()
                 .status(HttpStatus.CONFLICT.value())
                 .message(e.getMessage())
@@ -74,8 +72,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorDetails> handlerEntityNotFoundException(EntityNotFoundException e,
-                                                                       HttpServletRequest request) {
+    public ResponseEntity<ErrorDetails> handlerEntityNotFoundException(EntityNotFoundException e, HttpServletRequest request) {
         var errorDetails = new ErrorDetails.Builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(e.getMessage())
@@ -85,6 +82,18 @@ public class ExceptionsHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
     }
 
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorDetails> handlerNoResourceFoundException(NoResourceFoundException e, HttpServletRequest request) {
+        var errorDetails = new ErrorDetails.Builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(e.getMessage())
+                .timestamp(System.currentTimeMillis())
+                .build();
+        logger.error(e.getMessage(), e);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
+    }
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorDetails> handlerException(Exception e, HttpServletRequest request) {

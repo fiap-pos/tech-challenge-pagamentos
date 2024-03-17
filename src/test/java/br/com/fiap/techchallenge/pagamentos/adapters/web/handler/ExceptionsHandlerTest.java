@@ -6,10 +6,12 @@ import br.com.fiap.techchallenge.pagamentos.core.domain.exception.EntityNotFound
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpInputMessage;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -89,6 +91,17 @@ public class ExceptionsHandlerTest {
         assertThat(response.getBody()).isNotNull().isInstanceOf(ErrorDetails.class);
         assertThat(response.getBody().message()).isEqualTo("Requisição inválida.");
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+    @Test
+    void shouldHandleNoResourceFoundException() {
+        var exception = new NoResourceFoundException(HttpMethod.GET, "/");
+        var httpservletRequest = new MockHttpServletRequest();
+        var response = exceptionsHandler.handlerNoResourceFoundException(exception, httpservletRequest);
+
+        assertThat(response).isNotNull().isInstanceOf(ResponseEntity.class);
+        assertThat(response.getBody()).isNotNull().isInstanceOf(ErrorDetails.class);
+        assertThat(response.getBody().message()).isEqualTo(exception.getMessage());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 }
